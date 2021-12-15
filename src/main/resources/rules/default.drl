@@ -1,0 +1,47 @@
+package com.example.demo.drools //package不代表真实的包结构，是一个逻辑的概念，同一个包中的规则文件可以相互访问
+import com.example.demo.drools.bean.Order
+
+/*
+规则结构
+rule "规则名称"
+    when
+    then
+end
+*/
+
+//规则1：所购图书总价在100元以下的没有优惠
+rule "book_discount_1"
+    when
+        //命名语法，匹配到的对象命名为order
+        $order:Order(originalPrice < 100) //模式匹配，到规则引擎（工作内存）中查找Order对象
+    then
+        $order.setRealPrice($order.getOriginalPrice());
+        System.out.println("成功匹配到规则1：所购图书总价在100元以下的没有优惠");
+end
+
+//规则2：所购图书总价在100到200元的优惠20元
+rule "book_discount_2"
+    when
+        $order:Order(originalPrice >= 100 && originalPrice < 200)
+    then
+        $order.setRealPrice($order.getOriginalPrice()-20);
+        System.out.println("成功匹配到规则2：所购图书总价在100到200元的优惠20元");
+end
+
+//规则3：所购图书总价在200到300元的优惠50元
+rule "book_discount_3"
+    when
+        $order:Order(originalPrice >= 200 && originalPrice < 300)
+    then
+        $order.setRealPrice($order.getOriginalPrice()-50);
+        System.out.println("成功匹配到规则3：所购图书总价在200到300元的优惠50元");
+end
+
+//规则4：所购图书总价在300元以上的优惠100元
+rule "book_discount_4"
+    when
+        $order:Order(originalPrice >= 300)
+    then
+        $order.setRealPrice($order.getOriginalPrice()-100);
+        System.out.println("成功匹配到规则4：所购图书总价在300元以上的优惠100元");
+end
